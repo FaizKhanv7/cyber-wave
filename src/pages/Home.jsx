@@ -32,27 +32,73 @@ export default function Home() {
     <div className="bg-black text-white min-h-screen">
 
       {/* HERO */}
-      <section className="pt-32 pb-32 relative overflow-hidden">
+      <section className="pt-40 pb-40 relative overflow-hidden">
+        {/* Animated Background */}
         <div
           className="absolute inset-0 bg-[url('/hero-bg.png')] bg-cover opacity-20"
           style={{ transform: `translateY(${scrollY * 0.3}px)` }}
         />
+        
+        {/* Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 via-transparent to-purple-500/10" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
 
         <div className="relative max-w-5xl mx-auto text-center px-6">
-          <h1 className="text-6xl font-extrabold mb-6 leading-tight">
-            Ride the <span className="text-cyan-400">CyberWave</span>
-          </h1>
-          <p className="text-lg text-gray-300 mb-12 h-8">
-            {typewriterText}
-            <span className="animate-pulse">|</span>
-          </p>
+          {/* Main Title with enhanced styling */}
+          <div className="mb-8">
+            <div className="inline-block">
+              <h1 className="text-7xl md:text-8xl font-extrabold mb-2 leading-tight">
+                Ride the{" "}
+                <span className="relative inline-block">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 animate-gradient">
+                    CyberWave
+                  </span>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 blur-xl opacity-30 animate-pulse" />
+                </span>
+              </h1>
+              {/* Decorative Line */}
+              <div className="h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent rounded-full" />
+            </div>
+          </div>
 
-          <Link
-            to="/register"
-            className="bg-cyan-500 text-black px-6 py-3 rounded-xl text-lg font-semibold hover:bg-cyan-400 transition"
-          >
-            Join the Next Event
-          </Link>
+          {/* Typewriter Text */}
+          <div className="mb-12 h-8">
+            <p className="text-xl text-gray-300">
+              {typewriterText}
+              <span className="animate-pulse text-cyan-400 font-bold">|</span>
+            </p>
+          </div>
+
+          {/* CTA Button with enhanced design */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              to="/register"
+              className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl text-lg font-bold overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/50"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                Join the Next Event
+                <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </Link>
+          </div>
+
+          {/* Floating Stats or Badges */}
+          <div className="mt-16 flex flex-wrap justify-center gap-8 text-sm">
+            <div className="px-6 py-3 bg-white/5 backdrop-blur-sm border border-cyan-500/30 rounded-full">
+              <span className="text-cyan-400 font-bold">Learn</span>
+              <span className="text-gray-400 ml-2">new skills</span>
+            </div>
+            <div className="px-6 py-3 bg-white/5 backdrop-blur-sm border border-purple-500/30 rounded-full">
+              <span className="text-purple-400 font-bold">Amazing Prizes</span>
+              <span className="text-gray-400 ml-2">to Win</span>
+            </div>
+            <div className="px-6 py-3 bg-white/5 backdrop-blur-sm border border-blue-500/30 rounded-full">
+              <span className="text-blue-400 font-bold">Free Food</span>
+              <span className="text-gray-400 ml-2">& Swag</span>
+            </div>
+          </div>
         </div>
       </section>
 
