@@ -42,7 +42,7 @@ export default function Home() {
           <h1 className="text-6xl font-extrabold mb-6 leading-tight">
             Ride the <span className="text-cyan-400">CyberWave</span>
           </h1>
-          <p className="text-lg text-gray-300 mb-8 h-8">
+          <p className="text-lg text-gray-300 mb-12 h-8">
             {typewriterText}
             <span className="animate-pulse">|</span>
           </p>
