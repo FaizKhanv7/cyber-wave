@@ -2,50 +2,51 @@ import { ExternalLink, Users, FileText, MessageSquare, Zap } from "lucide-react"
 
 export default function Register() {
   return (
-    <div className="min-h-screen bg-black text-white pt-32 px-6 pb-20">
+    <div className="min-h-screen bg-[#F3F4F6] text-slate-900 pt-32 px-6 pb-20">
       <div className="max-w-5xl mx-auto">
 
-        {/* Title Section */}
+        {/* Title Section */}   
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-extrabold mb-4">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400">
-              Register for CyberWave
-            </span>
+          <h1 className="text-6xl font-black mb-4 tracking-tight">
+            Register for <span className="text-blue-600">CyberWave</span>
           </h1>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-600 text-xl font-medium max-w-2xl mx-auto">
             Join us for an incredible hackathon experience! Sign up below and get access to all the resources you need.
           </p>
         </div>
 
         {/* Main Registration Card */}
-        <div className="max-w-3xl mx-auto bg-gradient-to-br from-purple-900/30 to-cyan-900/30 border border-purple-500/30 rounded-3xl p-10 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300 shadow-2xl mb-12">
+        <div className="max-w-3xl mx-auto bg-white border-2 border-black rounded-3xl p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] mb-16 relative">
+          <div className="absolute -top-6 -right-6 bg-yellow-300 border-2 border-black px-4 py-2 rounded-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-12">
+            🚀 SPOTS FILLING FAST!
+          </div>
+
           <div className="flex items-center justify-center gap-3 mb-6">
-            <Zap className="w-8 h-8 text-cyan-400" />
-            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+            <h2 className="text-4xl font-black">
               Registration Form
             </h2>
           </div>
 
-          <p className="text-gray-300 text-center mb-8">
-            Ready to build something amazing? Fill out our registration form to secure your spot!
+          <p className="text-slate-600 text-center text-lg font-medium mb-8">
+            Ready to build something amazing? Fill out our Google Form to secure your spot.
           </p>
 
           <div className="text-center">
             <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSdGxYpSTpwWl4wgCWb2XkZN0uPAa1IFLmcA6vRGWzAvTQlFLA/viewform?usp=header"
+              href="https://events.mlh.io/events/13457-cyberwave-atlanta"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 transition-all duration-300 text-white rounded-xl text-lg font-bold shadow-lg hover:shadow-cyan-500/50 transform hover:scale-105"
+              className="inline-flex items-center gap-3 px-8 py-5 bg-blue-600 text-white border-2 border-black rounded-xl text-xl font-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
             >
               Open Registration Form
-              <ExternalLink className="w-5 h-5" />
+              <ExternalLink className="w-6 h-6" />
             </a>
           </div>
         </div>
 
         {/* Additional Resources Section */}
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-black text-center mb-8">
             Important Resources
           </h2>
 
@@ -56,54 +57,57 @@ export default function Register() {
               href="https://groupme.com/join_group/111216602/MUbueXZ3"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-6 bg-gradient-to-br from-cyan-900/20 to-blue-900/20 border border-cyan-500/30 rounded-2xl hover:border-cyan-500/50 hover:bg-cyan-900/30 transition-all duration-300 group"
+              className="p-6 bg-blue-100 border-2 border-black rounded-2xl hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all group"
             >
               <div className="flex items-center gap-3 mb-4">
-                <MessageSquare className="w-8 h-8 text-cyan-400 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-semibold text-cyan-300">GroupMe</h3>
+                <div className="bg-blue-500 border-2 border-black p-2 rounded-lg">
+                    <MessageSquare className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-black">GroupMe</h3>
               </div>
-              <p className="text-gray-300 text-sm">
-                Join our community chat to connect with other participants and get updates.
+              <p className="text-slate-700 font-bold text-sm">
+                Join our community chat to connect with other participants.
               </p>
-              <div className="mt-4 flex items-center gap-2 text-cyan-400 text-sm font-semibold">
-                Join Now
-                <ExternalLink className="w-4 h-4" />
+              <div className="mt-4 flex items-center gap-2 text-blue-600 text-sm font-black uppercase tracking-wide">
+                Join Now <ExternalLink className="w-4 h-4" />
               </div>
             </a>
 
             {/* Team Formation Guide */}
             <a
               href="#"
-              className="p-6 bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/30 rounded-2xl hover:border-purple-500/50 hover:bg-purple-900/30 transition-all duration-300 group"
+              className="p-6 bg-purple-100 border-2 border-black rounded-2xl hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all group"
             >
               <div className="flex items-center gap-3 mb-4">
-                <Users className="w-8 h-8 text-purple-400 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-semibold text-purple-300">Team Guide</h3>
+                 <div className="bg-purple-500 border-2 border-black p-2 rounded-lg">
+                    <Users className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-black">Team Guide</h3>
               </div>
-              <p className="text-gray-300 text-sm">
-                Learn how to form teams, find teammates, and collaborate effectively.
+              <p className="text-slate-700 font-bold text-sm">
+                Learn how to form teams and find teammates.
               </p>
-              <div className="mt-4 flex items-center gap-2 text-purple-400 text-sm font-semibold">
-                View Guide
-                <ExternalLink className="w-4 h-4" />
+              <div className="mt-4 flex items-center gap-2 text-purple-600 text-sm font-black uppercase tracking-wide">
+                View Guide <ExternalLink className="w-4 h-4" />
               </div>
             </a>
 
             {/* Permission Form */}
             <a
               href="#"
-              className="p-6 bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-500/30 rounded-2xl hover:border-blue-500/50 hover:bg-blue-900/30 transition-all duration-300 group"
+              className="p-6 bg-pink-100 border-2 border-black rounded-2xl hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all group"
             >
               <div className="flex items-center gap-3 mb-4">
-                <FileText className="w-8 h-8 text-blue-400 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl font-semibold text-blue-300">Permission Form</h3>
+                 <div className="bg-pink-500 border-2 border-black p-2 rounded-lg">
+                    <FileText className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-xl font-black">Waiver</h3>
               </div>
-              <p className="text-gray-300 text-sm">
-                Parent/Guardian consent form required for participants under 18.
+              <p className="text-slate-700 font-bold text-sm">
+                Parent/Guardian consent form required for under 18.
               </p>
-              <div className="mt-4 flex items-center gap-2 text-blue-400 text-sm font-semibold">
-                Download Form
-                <ExternalLink className="w-4 h-4" />
+              <div className="mt-4 flex items-center gap-2 text-pink-600 text-sm font-black uppercase tracking-wide">
+                Download <ExternalLink className="w-4 h-4" />
               </div>
             </a>
 
@@ -111,10 +115,10 @@ export default function Register() {
         </div>
 
         {/* Additional Info */}
-        <div className="max-w-3xl mx-auto mt-12 p-6 bg-white/5 border border-white/10 rounded-2xl">
-          <p className="text-gray-300 text-center text-sm">
-            <span className="text-cyan-400 font-semibold">Need help?</span> If you have any questions about registration or the event, 
-            feel free to reach out through our GroupMe or contact us directly at: <span className="text-cyan-400 font-semibold">cyberwavehackathon@gmail.com</span>
+        <div className="max-w-3xl mx-auto mt-12 p-6 bg-slate-200 border-2 border-black rounded-2xl text-center">
+          <p className="text-slate-700 font-bold">
+            <span className="text-black font-black bg-yellow-300 px-1 border border-black mr-1">Need help?</span> 
+            Contact us at: <a href="mailto:cyberwavehackathon@gmail.com" className="underline hover:text-blue-600">cyberwavehackathon@gmail.com</a>
           </p>
         </div>
 
