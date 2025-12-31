@@ -8,8 +8,8 @@ export default function FAQ() {
 
   const faqs = [
     {
-      q: "What is CyberWave Hackathon?",
-      a: "CyberWave is a 12-hour hackathon where students collaborate to build innovative projects using technology.",
+      q: "What is CyberWave?",
+      a: "CyberWave is a student led hackathon organization that hosts free hackathons and game jams where participants can compete for prizes and learn new skills.",
       color: "cyan"
     },
     {
@@ -29,7 +29,7 @@ export default function FAQ() {
     },
     {
       q: "Can I register without a team?",
-      a: "Yes — you can register solo and form a team at the event during team formation time.",
+      a: "Yes! You are allowed to compete solo or you can find teammates at the event if you don't have any during registration.",
       color: "purple"
     },
   ];

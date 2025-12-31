@@ -4,6 +4,22 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-slate-900 pt-32 px-6 pb-20">
       <div className="max-w-5xl mx-auto">
+                {/* Graph Paper Background */}
+        <div className="absolute inset-0 opacity-[0.15]" style={{ 
+          backgroundImage: `
+            linear-gradient(to right, #3b82f6 1px, transparent 1px),
+            linear-gradient(to bottom, #3b82f6 1px, transparent 1px)
+          `, 
+          backgroundSize: '40px 40px' 
+        }}></div>
+        {/* Accent lines for graph paper effect */}
+        <div className="absolute inset-0 opacity-[0.25]" style={{ 
+          backgroundImage: `
+            linear-gradient(to right, #1e40af 2px, transparent 2px),
+            linear-gradient(to bottom, #1e40af 2px, transparent 2px)
+          `, 
+          backgroundSize: '200px 200px' 
+        }}></div>
 
         {/* Title Section */}   
         <div className="text-center mb-16">
@@ -11,7 +27,7 @@ export default function Register() {
             Register for <span className="text-blue-600">CyberWave</span>
           </h1>
           <p className="text-slate-600 text-xl font-medium max-w-2xl mx-auto">
-            Join us for an incredible hackathon experience! Sign up below and get access to all the resources you need.
+            Join us for an incredible hackathon experience! Sign up for our next event below.
           </p>
         </div>
 
@@ -28,7 +44,7 @@ export default function Register() {
           </div>
 
           <p className="text-slate-600 text-center text-lg font-medium mb-8">
-            Ready to build something amazing? Fill out our Google Form to secure your spot.
+            Ready to build something amazing? Sign up for our event on MLH to secure your spot.
           </p>
 
           <div className="text-center">
@@ -44,8 +60,11 @@ export default function Register() {
           </div>
         </div>
 
+        
+
         {/* Additional Resources Section */}
         <div className="max-w-4xl mx-auto">
+          
           <h2 className="text-3xl font-black text-center mb-8">
             Important Resources
           </h2>

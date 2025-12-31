@@ -1,20 +1,49 @@
 import { Link } from "react-router-dom";
 import { Zap, Calendar, MapPin, Users, Code, Trophy, ArrowRight, Heart } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [typedText, setTypedText] = useState("");
+  const fullText = "Changing the world, one line of code at a time.";
+  
+  useEffect(() => {
+    let index = 0;
+    const timer = setInterval(() => {
+      if (index <= fullText.length) {
+        setTypedText(fullText.slice(0, index));
+        index++;
+      } else {
+        clearInterval(timer);
+      }
+    }, 50);
+    
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-slate-900 font-sans selection:bg-blue-300 selection:text-blue-900">
       
 
       {/* HERO SECTION */}
       <section className="relative pt-20 pb-32 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+        {/* Graph Paper Background */}
+        <div className="absolute inset-0 opacity-[0.15]" style={{ 
+          backgroundImage: `
+            linear-gradient(to right, #3b82f6 1px, transparent 1px),
+            linear-gradient(to bottom, #3b82f6 1px, transparent 1px)
+          `, 
+          backgroundSize: '40px 40px' 
+        }}></div>
+        {/* Accent lines for graph paper effect */}
+        <div className="absolute inset-0 opacity-[0.25]" style={{ 
+          backgroundImage: `
+            linear-gradient(to right, #1e40af 2px, transparent 2px),
+            linear-gradient(to bottom, #1e40af 2px, transparent 2px)
+          `, 
+          backgroundSize: '200px 200px' 
+        }}></div>
         
         <div className="max-w-4xl mx-auto text-center px-6 relative z-10">
-          <div className="inline-block px-4 py-1 mb-6 bg-yellow-300 border-2 border-black rounded-full text-sm font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transform -rotate-2">
-            ✨ Making the world better, one line of code at a time
-          </div>
           
           <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-6 leading-[0.9]">
             Ride the <br />
@@ -23,8 +52,9 @@ export default function Home() {
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-slate-600 mb-10 max-w-2xl mx-auto font-medium leading-relaxed">
-            A student-led community for builders, hackers, and dreamers. We build cool things, break them, and learn together.
+          <p className="text-xl md:text-2xl text-slate-600 mb-10 max-w-2xl mx-auto font-medium leading-relaxed min-h-[4rem]">
+            {typedText}
+            <span className="animate-pulse">|</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -135,7 +165,7 @@ export default function Home() {
           </div>
           <div className="mt-8 md:mt-0 flex flex-col items-center md:items-end">
             <p className="flex items-center gap-2 font-medium">
-              Made with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> by Faiz K
+              Made by Faiz K
             </p>
             <p className="text-sm text-gray-500 mt-2">Go build something awesome.</p>
           </div>

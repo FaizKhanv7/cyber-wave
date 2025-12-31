@@ -8,7 +8,6 @@ export default function Prizes() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Trophy className="w-12 h-12 text-black fill-yellow-400" />
             <h1 className="text-5xl md:text-6xl font-black">
               Prizes & Rewards
             </h1>
@@ -55,7 +54,7 @@ export default function Prizes() {
             <div className="relative p-8 bg-yellow-100 border-2 border-black rounded-3xl hover:-translate-y-2 transition-all duration-300 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] z-10">
               {/* Crown badge */}
               <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black border-2 border-black px-8 py-3 rounded-lg text-lg font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-2">
-                🏆 CHAMPION
+                🏆 CHAMP
               </div>
               
               <div className="mt-8 text-center">
