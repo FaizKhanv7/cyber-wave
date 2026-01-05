@@ -125,7 +125,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row gap-8 items-start md:items-center justify-between">
               <div>
                 <h2 className="text-4xl md:text-5xl font-black text-blue-600 mb-4">
-                  GameJam 2026
+                  Hackday 2026
                 </h2>
                 <div className="space-y-3 text-lg font-bold text-slate-700">
                   <div className="flex items-center gap-2">
@@ -167,7 +167,7 @@ export default function Home() {
             <p className="flex items-center gap-2 font-medium">
               Made by Faiz K
             </p>
-            <p className="text-sm text-gray-500 mt-2">Go build something awesome.</p>
+            <p className="text-sm text-gray-500 mt-2">CyberWave is awesome!</p>
           </div>
         </div>
       </footer>

@@ -2,7 +2,7 @@ import { Clock, Calendar, Zap, Coffee, Users, Code, Presentation, Award, Utensil
 
 export default function Schedule() {
   const schedule = [
-    { time: "8:00 AM", event: "Check-in & Breakfast", icon: Coffee, color: "orange" },
+    { time: "8:00 AM", event: "Check-in", icon: Coffee, color: "orange" },
     { time: "9:00 AM", event: "Opening Ceremony", icon: Zap, color: "purple" },
     { time: "9:30 AM", event: "Team Formation", icon: Users, color: "blue" },
     { time: "9:45 AM", event: "Hacking Begins", icon: Code, color: "green" },
@@ -36,7 +36,7 @@ export default function Schedule() {
             </h1>
           </div>
           <p className="text-slate-600 text-xl font-medium max-w-2xl mx-auto">
-            What's CyberWave GameJam '26 looking like?
+            What's CyberWave Hackday '26 looking like?
           </p>
         </div>
 
