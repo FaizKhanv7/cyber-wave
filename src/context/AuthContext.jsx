@@ -9,12 +9,27 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   async function fetchProfile(userId) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    setProfile(data);
+    try {
+      console.log('Fetching profile for user:', userId);
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+      
+      if (error) {
+        console.error('Profile fetch error:', error);
+      }
+      if (data) {
+        console.log('Profile loaded:', data);
+      } else {
+        console.warn('Profile not found for user:', userId);
+      }
+      setProfile(data);
+    } catch (err) {
+      console.error('Failed to fetch profile:', err);
+      setProfile(null);
+    }
   }
 
   useEffect(() => {
@@ -37,11 +52,25 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function signUp({ email, password, username }) {
-    return supabase.auth.signUp({
+    const options = username ? { data: { username } } : undefined;
+    const response = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { username } },
+      options,
     });
+
+    if (response.error?.status === 500) {
+      return {
+        ...response,
+        error: {
+          ...response.error,
+          message:
+            'Supabase signup failed due to a backend database issue. Check your Supabase project auth/database configuration.',
+        },
+      };
+    }
+
+    return response;
   }
 
   async function signIn({ email, password }) {

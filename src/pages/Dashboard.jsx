@@ -77,7 +77,30 @@ export default function Dashboard() {
       <div style={{ background: '#020804', color: '#f0fdf4', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'JetBrains Mono', monospace", position: 'relative' }}>
         <MatrixBackground />
         <Navbar />
-        <p style={{ position: 'relative', zIndex: 10, color: '#10b981', fontSize: 14 }}>Connecting_to_network...</p>
+        <div style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+          <p style={{ color: '#10b981', fontSize: 14, marginBottom: 12 }}>Connecting_to_network...</p>
+          <p style={{ color: '#6b7280', fontSize: 12, marginBottom: 16 }}>
+            {loading ? 'Loading profile...' : 'Profile not found. Please try refreshing.'}
+          </p>
+          {!loading && !profile && (
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                padding: '8px 16px',
+                background: '#10b981',
+                color: '#020804',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 12,
+                fontWeight: 600
+              }}
+            >
+              Retry
+            </button>
+          )}
+        </div>
       </div>
     );
   }

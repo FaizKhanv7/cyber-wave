@@ -38,8 +38,7 @@ export default function Auth() {
       if (error) {
         setError(error.message);
       } else {
-        setSuccess('Account created! Check your email to confirm, then log in.');
-        switchMode('login');
+        navigate('/confirm-email', { state: { email } });
       }
     } else {
       const { error } = await signIn({ email, password });
