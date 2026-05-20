@@ -667,7 +667,7 @@ export default function Home() {
                   <Calendar size={18} color="#10b981" /> May 23, 2026
                 </span>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#9ca3af", fontSize: 15 }}>
-                  <MapPin size={18} color="#10b981" /> Code Ninjas, Cumming, GA
+                  <MapPin size={18} color="#10b981" /> 5202 McGinnis Ferry Rd, Alpharetta, GA 30005
                 </span>
               </div>
             </div>
