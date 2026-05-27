@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WaveHack 2026 — Your Certificate</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600;700&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { background: #0a1a0f; font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+/* LANDING */
+#landing {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 40px 20px;
+  text-align: center;
+}
+
+.logo {
+  font-family: 'Share Tech Mono', monospace; font-size: 26px; font-weight: 400;
+  color: #00ff9d; letter-spacing: 0.15em; margin-bottom: 8px;
+}
+.logo-sub {
+  font-size: 13px; color: rgba(0,255,157,0.3); letter-spacing: 0.2em;
+  text-transform: uppercase; margin-bottom: 48px; font-family: 'Share Tech Mono', monospace; font-size: 11px;
+}
+
+.search-label {
+  font-size: 14px; color: rgba(0,255,157,0.5); letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 14px; font-family: 'Share Tech Mono', monospace; font-size: 12px;
+}
+
+.search-wrap {
+  position: relative; width: 100%; max-width: 460px; margin-bottom: 16px;
+}
+
+#name-input {
+  width: 100%; background: rgba(0,255,157,0.04);
+  border: 1px solid rgba(0,255,157,0.2); border-radius: 8px;
+  padding: 14px 20px; font-family: 'Rajdhani', sans-serif;
+  font-size: 16px; color: #fff; outline: none; letter-spacing: 0.05em;
+  transition: border-color 0.2s;
+}
+#name-input:focus { border-color: rgba(0,255,157,0.5); }
+#name-input::placeholder { color: rgba(255,255,255,0.2); }
+
+#results {
+  width: 100%; max-width: 460px;
+  background: #0d1f12; border: 1px solid rgba(0,255,157,0.12);
+  border-radius: 8px; overflow: hidden; margin-bottom: 24px;
+}
+
+.result-item {
+  padding: 13px 20px; cursor: pointer; font-size: 15px; font-weight: 500;
+  color: rgba(255,255,255,0.75); letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(255,255,255,0.05); transition: all 0.15s;
+  text-align: left;
+}
+.result-item:last-child { border-bottom: none; }
+.result-item:hover { background: rgba(0,255,157,0.07); color: #00ff9d; padding-left: 26px; }
+.result-item.no-match { color: rgba(255,255,255,0.3); cursor: default; font-style: italic; }
+.result-item.no-match:hover { background: none; color: rgba(255,255,255,0.3); padding-left: 20px; }
+
+.divider-line { width: 200px; height: 0.5px; background: linear-gradient(to right, transparent, rgba(0,255,157,0.3), transparent); margin: 0 auto 32px; }
+
+/* CERT VIEW */
+#cert-view { display: none; min-height: 100vh; flex-direction: column; align-items: center; padding: 32px 20px; }
+
+.back-btn {
+  align-self: flex-start; background: transparent; border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.4); font-family: 'Rajdhani', sans-serif; font-size: 13px;
+  padding: 7px 16px; border-radius: 4px; cursor: pointer; letter-spacing: 0.06em;
+  margin-bottom: 28px; transition: all 0.15s;
+}
+.back-btn:hover { border-color: #00ff9d; color: #00ff9d; }
+
+.greeting {
+  font-size: 15px; color: rgba(255,255,255,0.4); letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.greeting-name {
+  font-family: 'Share Tech Mono', monospace; font-size: 22px; font-weight: 400;
+  color: #00ff9d; margin-bottom: 28px; letter-spacing: 0.06em;
+}
+
+/* CERT */
+.cert {
+  width: min(960px, 100%); aspect-ratio: 960/742;
+  background: #071a0c; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+}
+
+.circuit-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,157,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,157,0.04) 1px, transparent 1px),
+    linear-gradient(rgba(0,255,157,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,157,0.02) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+}
+
+.corner-shape { position: absolute; width: 130px; height: 130px; opacity: 0.85; }
+.corner-shape svg { width: 100%; height: 100%; }
+.cs-tl { top: 0; left: 0; }
+.cs-tr { top: 0; right: 0; transform: scaleX(-1); }
+.cs-bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.cs-br { bottom: 0; right: 0; transform: scale(-1); }
+
+.cert-content {
+  position: relative; z-index: 2; width: 100%;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 0 12%;
+}
+
+.cert-title {
+  font-family: 'Share Tech Mono', monospace; font-size: clamp(28px, 5.4vw, 48px); font-weight: 400;
+  color: #00ff9d; letter-spacing: 0.15em; text-transform: uppercase;
+  line-height: 1; margin-bottom: 8px; text-shadow: 0 0 20px rgba(0,255,157,0.2);
+}
+.cert-sub {
+  font-size: clamp(11px, 1.8vw, 17px); font-weight: 500; color: #fff;
+  letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 20px;
+}
+.cert-divider {
+  width: 100%; height: 0.5px;
+  background: linear-gradient(to right, transparent, rgba(0,255,157,0.4), transparent);
+  margin-bottom: 16px;
+}
+.presented-text {
+  font-size: clamp(10px, 1.4vw, 14px); color: rgba(255,255,255,0.6);
+  letter-spacing: 0.08em; margin-bottom: 4px;
+}
+.participant-name {
+  font-family: 'Share Tech Mono', monospace; font-weight: 400; color: #00ff9d;
+  letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2;
+  margin-bottom: 14px; text-shadow: 0 0 15px rgba(0,255,157,0.2);
+}
+.cert-desc {
+  font-size: clamp(9px, 1.2vw, 13px); color: rgba(255,255,255,0.45);
+  letter-spacing: 0.05em; line-height: 1.7; max-width: 580px; margin-bottom: 18px;
+}
+.cert-divider2 {
+  width: 340px; height: 0.5px; max-width: 60%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
+  margin-bottom: 14px;
+}
+.sig-row {
+  width: 100%; display: flex; align-items: flex-start;
+  justify-content: space-between; padding: 0 6%;
+}
+.sig-block { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.sig-block.right { align-items: flex-end; }
+.sig-underline { width: 140px; height: 0.5px; background: rgba(0,255,157,0.4); margin-bottom: 4px; }
+.sig-name { font-size: clamp(10px, 1.4vw, 15px); font-weight: 600; color: #00ff9d; letter-spacing: 0.06em; font-family: 'Share Tech Mono', monospace; }
+.sig-role { font-size: clamp(8px, 1.1vw, 12px); color: rgba(255,255,255,0.35); letter-spacing: 0.08em; }
+
+.holo { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); width: 10%; z-index: 2; }
+.holo svg { width: 100%; height: 100%; }
+
+.cert-id { position: absolute; bottom: 2%; right: 3%; font-size: clamp(7px, 0.9vw, 9px); color: rgba(255,255,255,0.1); letter-spacing: 0.1em; font-family: monospace; z-index: 2; }
+
+/* Download btn */
+.dl-btn {
+  background: #00ff9d; border: none; color: #000;
+  font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700;
+  padding: 12px 32px; border-radius: 6px; cursor: pointer;
+  letter-spacing: 0.1em; text-transform: uppercase; transition: background 0.15s;
+}
+.dl-btn:hover { background: #00e88a; }
+.dl-note { font-size: 11px; color: rgba(255,255,255,0.2); margin-top: 10px; letter-spacing: 0.06em; }
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing">
+  <div class="logo">WAVEHACK</div>
+  <div class="logo-sub">2026 Summer Hackathon</div>
+  <div class="search-label">Find your certificate</div>
+  <div class="search-wrap">
+    <input type="text" id="name-input" placeholder="Type your name..." oninput="filterNames()" autocomplete="off">
+  </div>
+  <div id="results"></div>
+  <div class="divider-line"></div>
+  <div style="font-size:12px;color:rgba(255,255,255,0.2);letter-spacing:0.08em;">wavehack.org</div>
+</div>
+
+<!-- CERT VIEW -->
+<div id="cert-view">
+  <button class="back-btn" onclick="goBack()">← Back</button>
+  <div class="greeting">Congratulations,</div>
+  <div class="greeting-name" id="greeting-name"></div>
+
+  <div class="cert" id="the-cert">
+    <div class="circuit-bg"></div>
+    <div class="corner-shape cs-tl" id="c-tl"></div>
+    <div class="corner-shape cs-tr" id="c-tr"></div>
+    <div class="corner-shape cs-bl" id="c-bl"></div>
+    <div class="corner-shape cs-br" id="c-br"></div>
+    <div class="cert-content">
+      <div class="cert-title">Certificate</div>
+      <div class="cert-sub">Of Participation</div>
+      <div class="cert-divider"></div>
+      <div class="presented-text">This certificate is proudly presented to</div>
+      <div class="participant-name" id="cert-name"></div>
+      <div class="cert-desc">
+        for participating in the 2026 Summer WaveHack Hackathon on May 23, 2026,<br>
+        demonstrating creativity, technical skill, and entrepreneurial spirit.
+      </div>
+      <div class="cert-divider2"></div>
+      <div class="sig-row">
+        <div class="sig-block">
+          <div class="sig-underline"></div>
+          <div class="sig-name">Rishi Gopinath</div>
+          <div class="sig-role">Co-Founder, WaveHack</div>
+        </div>
+        <div style="width:80px"></div>
+        <div class="sig-block right">
+          <div class="sig-underline"></div>
+          <div class="sig-name">May 23, 2026</div>
+          <div class="sig-role">Date</div>
+        </div>
+      </div>
+    </div>
+    <div class="holo" id="holo-el"></div>
+    <div class="cert-id" id="cert-id-el"></div>
+  </div>
+
+  <button class="dl-btn" onclick="downloadCert()">⬇ Download My Certificate</button>
+  <div class="dl-note">Downloads as a high-resolution PNG</div>
+  <div style="margin-top:20px;max-width:460px;text-align:center;font-size:13px;color:rgba(255,255,255,0.3);line-height:1.7;letter-spacing:0.04em;">
+    💡 If you prefer the look of this page, feel free to take a screenshot of your certificate instead — it works just as well!
+  </div>
+</div>
+
+<script>
+const participants = [
+  "Devraj Kumar","Harshith Karthikeyan","Ashrit Talluri",
+  "Deven Patel","Charith Kumar Gunda","Saaz Kharade","Prudhvi Chilumooru",
+  "Naga Sai Sasidhar Duvvarapu","Juhi Anandikar","Arnav Agrawal","Kaushal Avancha",
+  "Arjun Ananda","Abdumalik Al Musallam","Venkata Mannem",
+  "Abishek Mohan","Sarthak Bagal",
+  "Harshit Chaturvedi","Anghelo Araujo","Laasya D",
+  "Veer Sanghavi","Pratyush Raghuvanshi","Harshit Chaturvedy",
+  "Shridhar Chavan","Aditya Ravuri","Ritvik Bennur","Kanishk Khatri",
+  "Ali Makhmudov","Ramcharan Nagisetty",
+  "Taran V","Soham Kashyap"
+];
+
+const cornerSVG = `<svg viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <polygon points="0,0 130,0 0,130" fill="rgba(0,15,50,0.6)" stroke="none"/>
+  <line x1="2" y1="2" x2="120" y2="2" stroke="rgba(0,255,157,0.6)" stroke-width="1.5"/>
+  <line x1="2" y1="2" x2="2" y2="120" stroke="rgba(0,255,157,0.6)" stroke-width="1.5"/>
+  <line x1="2" y1="2" x2="60" y2="2" stroke="rgba(0,212,255,0.9)" stroke-width="2.5"/>
+  <line x1="2" y1="2" x2="2" y2="60" stroke="rgba(0,212,255,0.9)" stroke-width="2.5"/>
+  <circle cx="2" cy="2" r="4" fill="#00ff9d"/>
+  <line x1="30" y1="2" x2="30" y2="30" stroke="rgba(0,255,157,0.3)" stroke-width="0.5"/>
+  <line x1="2" y1="30" x2="30" y2="30" stroke="rgba(0,255,157,0.3)" stroke-width="0.5"/>
+  <circle cx="30" cy="30" r="2" fill="rgba(0,212,255,0.5)"/>
+  <line x1="10" y1="45" x2="45" y2="10" stroke="rgba(0,212,255,0.2)" stroke-width="0.5"/>
+  <line x1="20" y1="65" x2="65" y2="20" stroke="rgba(0,255,157,0.15)" stroke-width="0.5"/>
+  <line x1="35" y1="5" x2="5" y2="35" stroke="rgba(0,212,255,0.2)" stroke-width="0.5"/>
+</svg>`;
+
+const holoSVG = `<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="40" cy="40" r="38" stroke="rgba(0,255,157,0.3)" stroke-width="0.5"/>
+  <circle cx="40" cy="40" r="32" stroke="rgba(0,255,157,0.4)" stroke-width="0.5"/>
+  <circle cx="40" cy="40" r="24" stroke="rgba(0,255,157,0.5)" stroke-width="0.5"/>
+  <circle cx="40" cy="40" r="16" stroke="rgba(0,255,157,0.6)" stroke-width="1"/>
+  <circle cx="40" cy="40" r="8" stroke="#00ff9d" stroke-width="1"/>
+  <circle cx="40" cy="40" r="3" fill="#00ff9d" opacity="0.8"/>
+  <line x1="40" y1="2" x2="40" y2="78" stroke="rgba(0,255,157,0.15)" stroke-width="0.5"/>
+  <line x1="2" y1="40" x2="78" y2="40" stroke="rgba(0,255,157,0.15)" stroke-width="0.5"/>
+</svg>`;
+
+document.querySelectorAll('.corner-shape').forEach(el => el.innerHTML = cornerSVG);
+document.getElementById('holo-el').innerHTML = holoSVG;
+
+let currentName = '';
+let currentIndex = 0;
+
+function filterNames() {
+  const q = document.getElementById('name-input').value.toLowerCase().trim();
+  const resultsEl = document.getElementById('results');
+  if (!q) { resultsEl.innerHTML = ''; return; }
+  const matches = participants.filter(n => n.toLowerCase().includes(q));
+  if (matches.length === 0) {
+    resultsEl.innerHTML = '<div class="result-item no-match">No participant found</div>';
+  } else {
+    resultsEl.innerHTML = matches.map(n =>
+      `<div class="result-item" onclick="showCert('${n.replace(/'/g,"\\'")}', ${participants.indexOf(n)})">${n}</div>`
+    ).join('');
+  }
+}
+
+function showCert(name, index) {
+  currentName = name;
+  currentIndex = index;
+  const nameLen = name.length;
+  const fontSize = nameLen > 22 ? 'clamp(18px, 2.8vw, 26px)' : nameLen > 16 ? 'clamp(22px, 3.4vw, 32px)' : 'clamp(26px, 4vw, 40px)';
+  document.getElementById('cert-name').style.fontSize = fontSize;
+  document.getElementById('cert-name').textContent = name;
+  document.getElementById('greeting-name').textContent = name.split(' ')[0] + '!';
+  document.getElementById('cert-id-el').textContent = 'WH-2026-' + String(index + 1).padStart(3, '0');
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('cert-view').style.display = 'flex';
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  document.getElementById('cert-view').style.display = 'none';
+  document.getElementById('landing').style.display = 'flex';
+}
+
+function downloadCert() {
+  const btn = document.querySelector('.dl-btn');
+  btn.textContent = '⏳ Generating...';
+
+  const W = 1920, H = 1080;
+  const name = currentName;
+  const certNum = String(currentIndex + 1).padStart(3, '0');
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // reset letter spacing
+  ctx.letterSpacing = '0px';
+
+  // Background
+  ctx.fillStyle = '#071a0c';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(0,255,157,0.04)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 80) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 80) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(0,255,157,0.02)';
+  for (let x = 0; x < W; x += 20) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 20) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // Corner accents
+  function drawCorner(cx, cy, fx, fy) {
+    ctx.save();
+    ctx.translate(cx, cy); ctx.scale(fx, fy);
+    ctx.strokeStyle = 'rgba(0,255,157,0.6)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(200,0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,200); ctx.stroke();
+    ctx.strokeStyle = '#00ff9d'; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(100,0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,100); ctx.stroke();
+    ctx.fillStyle = '#00ff9d';
+    ctx.beginPath(); ctx.arc(0,0,7,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,255,157,0.3)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(60,0); ctx.lineTo(60,60); ctx.lineTo(0,60); ctx.stroke();
+    ctx.fillStyle = 'rgba(0,255,157,0.5)';
+    ctx.beginPath(); ctx.arc(60,60,3,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  drawCorner(24, 24, 1, 1);
+  drawCorner(W-24, 24, -1, 1);
+  drawCorner(24, H-24, 1, -1);
+  drawCorner(W-24, H-24, -1, -1);
+
+  // helper: centered text with tracked spacing
+  function ctext(txt, y, font, color, spacing=0) {
+    ctx.font = font; ctx.fillStyle = color; ctx.textAlign = 'center';
+    if (spacing === 0) {
+      ctx.fillText(txt, W/2, y);
+    } else {
+      // manual letter spacing
+      const chars = txt.split('');
+      const totalW = ctx.measureText(txt).width + spacing * (chars.length - 1);
+      let startX = W/2 - totalW/2;
+      chars.forEach(ch => {
+        ctx.fillText(ch, startX + ctx.measureText(ch).width/2, y);
+        startX += ctx.measureText(ch).width + spacing;
+      });
+    }
+  }
+
+  // Top divider
+  const grad1 = ctx.createLinearGradient(0,0,W,0);
+  grad1.addColorStop(0,'transparent'); grad1.addColorStop(0.5,'rgba(0,255,157,0.4)'); grad1.addColorStop(1,'transparent');
+  ctx.strokeStyle = grad1; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0,420); ctx.lineTo(W,420); ctx.stroke();
+
+  // CERTIFICATE
+  ctext('CERTIFICATE', 210, '400 108px monospace', '#00ff9d', 6);
+
+  // OF PARTICIPATION
+  ctext('OF PARTICIPATION', 278, '500 38px Arial, sans-serif', '#ffffff', 8);
+
+  // divider under subtitle
+  ctx.strokeStyle = grad1; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W*0.25, 318); ctx.lineTo(W*0.75, 318); ctx.stroke();
+
+  // presented to
+  ctext('This certificate is proudly presented to', 385, '400 26px Arial, sans-serif', 'rgba(255,255,255,0.55)');
+
+  // Name — scale font so it fits within 80% of width
+  const maxW = W * 0.78;
+  const nameUpper = name.toUpperCase();
+  let nameFontSize = name.length > 22 ? 68 : name.length > 16 ? 86 : 100;
+  ctx.font = `400 ${nameFontSize}px monospace`;
+  while (ctx.measureText(nameUpper).width > maxW && nameFontSize > 40) {
+    nameFontSize -= 4;
+    ctx.font = `400 ${nameFontSize}px monospace`;
+  }
+  ctext(nameUpper, 500, `400 ${nameFontSize}px monospace`, '#00ff9d');
+
+  // description — no letter spacing, use regular sans
+  ctx.font = '400 24px Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.textAlign = 'center';
+  ctx.fillText('for participating in the 2026 Summer WaveHack Hackathon on May 23, 2026,', W/2, 598);
+  ctx.fillText('demonstrating creativity, technical skill, and entrepreneurial spirit.', W/2, 632);
+
+  // mid divider
+  const grad2 = ctx.createLinearGradient(W*0.3,0,W*0.7,0);
+  grad2.addColorStop(0,'transparent'); grad2.addColorStop(0.5,'rgba(255,255,255,0.15)'); grad2.addColorStop(1,'transparent');
+  ctx.strokeStyle = grad2; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W*0.3, 688); ctx.lineTo(W*0.7, 688); ctx.stroke();
+
+  // sig lines
+  ctx.strokeStyle = 'rgba(0,255,157,0.4)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(180, 750); ctx.lineTo(520, 750); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W-520, 750); ctx.lineTo(W-180, 750); ctx.stroke();
+
+  // sig text
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#00ff9d'; ctx.font = 'bold 28px monospace';
+  ctx.fillText('Rishi Gopinath', 180, 790);
+  ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = '400 20px Arial, sans-serif';
+  ctx.fillText('Co-Founder, WaveHack', 180, 818);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#00d4ff'; ctx.font = 'bold 28px Arial, sans-serif';
+  ctx.fillText('May 23, 2026', W-180, 790);
+  ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.font = '400 20px Arial, sans-serif';
+  ctx.fillText('Date', W-180, 818);
+
+  // Holo circle
+  const hcx = W/2, hcy = 930;
+  [70,56,42,28,14].forEach((r,i) => {
+    ctx.strokeStyle = `rgba(0,255,157,${0.15+i*0.09})`; ctx.lineWidth = i===4?2:0.8;
+    ctx.beginPath(); ctx.arc(hcx,hcy,r,0,Math.PI*2); ctx.stroke();
+  });
+  ctx.fillStyle = 'rgba(0,255,157,0.8)';
+  ctx.beginPath(); ctx.arc(hcx,hcy,5,0,Math.PI*2); ctx.fill();
+
+  // cert id
+  ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.font = '16px monospace'; ctx.textAlign = 'right';
+  ctx.fillText('WH-2026-' + certNum, W-36, H-18);
+
+  const link = document.createElement('a');
+  link.download = name.replace(/ /g, '_') + '_WaveHack_Certificate.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  btn.textContent = '⬇ Download My Certificate';
+}
+</script>
+</body>
+</html>
