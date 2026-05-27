@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/certificates", "destination": "/wavehack_participation_certs.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
