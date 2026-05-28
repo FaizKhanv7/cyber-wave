@@ -10,6 +10,7 @@ import {
   Instagram,
   Linkedin,
   Mail,
+  MessageSquare,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
@@ -226,7 +227,7 @@ const SponsorCarousel = ({ sponsors }) => {
 
 /* ================= IMAGE CAROUSEL ================= */
 const ImageCarousel = () => {
-  const images = ["/event.jpeg", "/event2.jpeg", "/event3.jpeg"];
+  const images = ["/event.jpeg", "/event2.jpeg", "/event4.jpg", "/event5.jpg", "/event6.jpg"];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -296,9 +297,9 @@ export default function Home() {
 
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
-  const stat1 = useCountUp("1", 1200, statsVisible);
-  const stat2 = useCountUp("30+", 1800, statsVisible);
-  const stat3 = useCountUp("$500+", 2000, statsVisible);
+  const stat1 = useCountUp("2", 1200, statsVisible);
+  const stat2 = useCountUp("75+", 1800, statsVisible);
+  const stat3 = useCountUp("$700+", 2000, statsVisible);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -312,7 +313,6 @@ export default function Home() {
   const sponsors = [
     { name: "Google Gemini", logo: "/GeminiIcon.png", url: "https://gemini.google.com" },
     { name: "GitHub", logo: "/github.png", url: "https://github.com" },
-    { name: "LockIn", logo: "/LockIn.png", url: "https://lockinfounders.com" },
     { name: "Outback", logo: "/OutbackLogo.png", url: "https://locations.outback.com" },
     { name: "Skits", logo: "/Skits.png", url: "" },
     { name: "Minorities In Stem", logo: "/Minorities.png", url: "https://www.minoritiesinstem.org/" }
@@ -633,8 +633,8 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* UPCOMING EVENT — REGISTRATION OPEN */}
-          <div className="event-card">
+          {/* FINISHED EVENT — GITHUB */}
+          <div className="event-card" style={{ opacity: 0.7, filter: "grayscale(30%)" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
                 <span
@@ -652,33 +652,21 @@ export default function Home() {
                     fontFamily: "monospace",
                   }}
                 >
-                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 6px #10b981", display: "inline-block" }} />
-                  Registration Open
+                  <CheckCircle size={14} /> Finished
                 </span>
-                <p style={{ fontSize: 13, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", fontFamily: "monospace" }}>
-                  Upcoming
-                </p>
               </div>
-              <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 28, color: "#f0fdf4", marginBottom: 16 }}>
+              <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 28, color: "#d1fae5", marginBottom: 16 }}>
                 Hackday: Github
               </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#9ca3af", fontSize: 15 }}>
-                  <Calendar size={18} color="#10b981" /> May 23, 2026
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#6b7280", fontSize: 15 }}>
+                  <Calendar size={18} color="#059669" /> May 23, 2026
                 </span>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#9ca3af", fontSize: 15 }}>
-                  <MapPin size={18} color="#10b981" /> 5202 McGinnis Ferry Rd, Alpharetta, GA 30005
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#6b7280", fontSize: 15 }}>
+                  <MapPin size={18} color="#059669" /> 5202 McGinnis Ferry Rd, Alpharetta, GA 30005
                 </span>
               </div>
             </div>
-            <a
-              href="https://events.mlh.io/events/13990-wavehack"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-register"
-            >
-              Register Now <ExternalLink size={14} />
-            </a>
           </div>
 
           {/* FINISHED EVENT */}
@@ -746,6 +734,9 @@ export default function Home() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+          <a href="https://groupme.com/join_group/113593335/tHhxoCgi" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GroupMe Community">
+            <MessageSquare size={22} />
+          </a>
           <a href="https://www.instagram.com/wavehack_26/" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="Instagram">
             <Instagram size={22} />
           </a>

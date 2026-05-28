@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Terminal } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
@@ -6,8 +6,7 @@ import { useAuth } from "../context/AuthContext";
 export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,11 +22,6 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
-
-  async function handleSignOut() {
-    await signOut();
-    navigate("/");
-  }
 
   return (
     <nav
@@ -136,19 +130,13 @@ export default function Navbar() {
           <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
 
           {user ? (
-            <>
-              <Link to="/dashboard" className="nav-cta">
-                <Terminal size={14} /> Dashboard
-              </Link>
-              <button className="nav-link" onClick={handleSignOut}>Logout</button>
-            </>
+            <Link to="/dashboard" className="nav-cta">
+              <Terminal size={14} /> Dashboard
+            </Link>
           ) : (
-            <>
-              <Link to="/auth" className="nav-link">Login</Link>
-              <Link to="/register" className="nav-cta">
-                <Terminal size={14} /> Register
-              </Link>
-            </>
+            <Link to="/auth" className="nav-cta">
+              <Terminal size={14} /> Login
+            </Link>
           )}
         </div>
       </div>

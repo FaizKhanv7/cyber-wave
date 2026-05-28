@@ -13,7 +13,7 @@ export default function Auth() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading, signIn } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,11 +34,26 @@ export default function Auth() {
 
     if (mode === 'signup') {
       if (!username.trim()) { setError('Username is required'); setSubmitting(false); return; }
-      const { error } = await signUp({ email, password, username: username.trim() });
-      if (error) {
-        setError(error.message);
-      } else {
-        navigate('/confirm-email', { state: { email } });
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-signup-otp`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
+            body: JSON.stringify({ email, password, username: username.trim() }),
+          }
+        );
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || 'Failed to send verification code');
+        } else {
+          navigate('/confirm-email', { state: { email, password } });
+        }
+      } catch {
+        setError('Network error. Please try again.');
       }
     } else {
       const { error } = await signIn({ email, password });

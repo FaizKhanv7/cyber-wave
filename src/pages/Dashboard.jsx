@@ -1,21 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Terminal, Copy, Check, Zap, Users } from 'lucide-react';
+import { Terminal, Copy, Check, Zap, Users, LogOut, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import MatrixBackground from '../components/MatrixBackground';
 import Navbar from '../components/Navbar';
 
 export default function Dashboard() {
-  const { user, profile, loading, refreshProfile } = useAuth();
+  const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
-  const [redeemCode, setRedeemCode] = useState('');
-  const [redeemStatus, setRedeemStatus] = useState('');
-  const [redeemMessage, setRedeemMessage] = useState('');
-  const [redeemLoading, setRedeemLoading] = useState(false);
-  const [hasRedeemed, setHasRedeemed] = useState(false);
   const [referralCount, setReferralCount] = useState(0);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     if (!loading && !user) navigate('/auth');
@@ -23,18 +21,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!user) return;
-    checkRedemptionStatus();
     fetchReferralCount();
   }, [user]);
-
-  async function checkRedemptionStatus() {
-    const { data } = await supabase
-      .from('referrals')
-      .select('id')
-      .eq('referee_id', user.id)
-      .maybeSingle();
-    setHasRedeemed(!!data);
-  }
 
   async function fetchReferralCount() {
     const { count } = await supabase
@@ -44,32 +32,30 @@ export default function Dashboard() {
     setReferralCount(count || 0);
   }
 
-  async function handleRedeem(e) {
-    e.preventDefault();
-    if (!redeemCode.trim()) return;
-    setRedeemLoading(true);
-    setRedeemStatus('');
-    setRedeemMessage('');
-
-    const { error } = await supabase.rpc('redeem_referral', { code: redeemCode.trim() });
-    if (error) {
-      setRedeemStatus('error');
-      setRedeemMessage(error.message);
-    } else {
-      setRedeemStatus('success');
-      setRedeemMessage('Code redeemed successfully. +10 hack_points credited to your node.');
-      setRedeemCode('');
-      setHasRedeemed(true);
-      await refreshProfile();
-    }
-    setRedeemLoading(false);
-  }
-
   function copyCode() {
     if (!profile?.referral_code) return;
     navigator.clipboard.writeText(profile.referral_code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function handleLogout() {
+    await signOut();
+    navigate('/');
+  }
+
+  async function handleDeleteAccount() {
+    setDeleting(true);
+    setDeleteError('');
+    const { error } = await supabase.functions.invoke('delete-account');
+    if (error) {
+      setDeleteError(error.message || 'Failed to delete account. Please try again.');
+      setDeleting(false);
+      setShowDeleteConfirm(false);
+    } else {
+      await signOut();
+      navigate('/');
+    }
   }
 
   if (loading || !profile) {
@@ -85,17 +71,7 @@ export default function Dashboard() {
           {!loading && !profile && (
             <button
               onClick={() => window.location.reload()}
-              style={{
-                padding: '8px 16px',
-                background: '#10b981',
-                color: '#020804',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: 12,
-                fontWeight: 600
-              }}
+              style={{ padding: '8px 16px', background: '#10b981', color: '#020804', border: 'none', borderRadius: '4px', cursor: 'pointer', fontFamily: "'JetBrains Mono', monospace", fontSize: 12, fontWeight: 600 }}
             >
               Retry
             </button>
@@ -173,52 +149,6 @@ export default function Dashboard() {
           animation: countUp 0.8s ease 0.3s both;
         }
 
-        .redeem-input {
-          flex: 1;
-          background: rgba(16,185,129,0.04);
-          border: 1px solid rgba(16,185,129,0.15);
-          border-radius: 6px;
-          padding: 12px 16px;
-          color: #f0fdf4;
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 14px;
-          outline: none;
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
-          min-width: 0;
-        }
-        .redeem-input:focus {
-          border-color: rgba(16,185,129,0.5);
-          box-shadow: 0 0 16px rgba(16,185,129,0.08);
-        }
-        .redeem-input::placeholder { color: rgba(107,114,128,0.7); }
-        .redeem-input:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .btn-redeem {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 12px 24px;
-          background: #10b981;
-          color: #020804;
-          font-family: 'JetBrains Mono', monospace;
-          font-weight: 800;
-          font-size: 13px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          box-shadow: 0 0 16px rgba(16,185,129,0.2);
-          transition: all 0.3s ease;
-          white-space: nowrap;
-          flex-shrink: 0;
-        }
-        .btn-redeem:hover:not(:disabled) {
-          background: #34d399;
-          box-shadow: 0 0 28px rgba(16,185,129,0.4);
-        }
-        .btn-redeem:disabled { opacity: 0.5; cursor: not-allowed; }
-
         .btn-copy {
           display: inline-flex;
           align-items: center;
@@ -242,6 +172,71 @@ export default function Dashboard() {
           background: rgba(16,185,129,0.08);
           border-color: #10b981;
         }
+
+        .btn-danger {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 24px;
+          background: rgba(239,68,68,0.08);
+          color: #f87171;
+          font-family: 'JetBrains Mono', monospace;
+          font-weight: 700;
+          font-size: 13px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          border: 1px solid rgba(239,68,68,0.25);
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          white-space: nowrap;
+        }
+        .btn-danger:hover:not(:disabled) {
+          background: rgba(239,68,68,0.14);
+          border-color: rgba(239,68,68,0.5);
+          box-shadow: 0 0 20px rgba(239,68,68,0.08);
+        }
+        .btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-danger-confirm {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 24px;
+          background: #ef4444;
+          color: #fff;
+          font-family: 'JetBrains Mono', monospace;
+          font-weight: 700;
+          font-size: 13px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .btn-danger-confirm:hover:not(:disabled) {
+          background: #dc2626;
+          box-shadow: 0 0 24px rgba(239,68,68,0.3);
+        }
+        .btn-danger-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-cancel {
+          display: inline-flex;
+          align-items: center;
+          padding: 12px 24px;
+          background: transparent;
+          color: #6b7280;
+          font-family: 'JetBrains Mono', monospace;
+          font-weight: 600;
+          font-size: 13px;
+          text-transform: uppercase;
+          border: 1px solid rgba(107,114,128,0.2);
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .btn-cancel:hover { color: #9ca3af; border-color: rgba(107,114,128,0.4); }
       `}</style>
 
       <MatrixBackground />
@@ -285,7 +280,7 @@ export default function Dashboard() {
         </div>
 
         {/* Referral code */}
-        <div className="dash-card dash-fade-3" style={{ marginBottom: 24 }}>
+        <div className="dash-card dash-fade-3" style={{ marginBottom: 48 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px #10b981' }} />
             <span style={{ fontSize: 11, fontWeight: 600, color: '#10b981', textTransform: 'uppercase', letterSpacing: 2 }}>Your_Referral_Code</span>
@@ -303,48 +298,43 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Redeem code */}
-        <div className="dash-card dash-fade-4">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: hasRedeemed ? '#374151' : '#10b981', boxShadow: hasRedeemed ? 'none' : '0 0 8px #10b981' }} />
-            <span style={{ fontSize: 11, fontWeight: 600, color: hasRedeemed ? '#374151' : '#10b981', textTransform: 'uppercase', letterSpacing: 2 }}>
-              {hasRedeemed ? 'Code_Redeemed' : 'Redeem_A_Code'}
-            </span>
+        {/* ─── DANGER ZONE ─── */}
+        <div className="dash-fade-4" style={{ borderTop: '1px solid rgba(239,68,68,0.12)', paddingTop: 40 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 24 }}>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(239,68,68,0.6)', textTransform: 'uppercase', letterSpacing: 2 }}>Danger_Zone</span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(239,68,68,0.1)' }} />
           </div>
 
-          {hasRedeemed ? (
-            <p style={{ color: '#6b7280', fontSize: 13, lineHeight: 1.7, marginTop: 8 }}>
-              You've already redeemed a referral or promo code. Each node can only redeem one.
-            </p>
+          {deleteError && (
+            <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 6, padding: '12px 16px', marginBottom: 20, color: '#fca5a5', fontSize: 13 }}>
+              {deleteError}
+            </div>
+          )}
+
+          {!showDeleteConfirm ? (
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <button className="btn-danger" onClick={handleLogout}>
+                <LogOut size={14} /> Logout
+              </button>
+              <button className="btn-danger" onClick={() => { setShowDeleteConfirm(true); setDeleteError(''); }}>
+                <Trash2 size={14} /> Delete_Account
+              </button>
+            </div>
           ) : (
-            <>
-              <p style={{ color: '#6b7280', fontSize: 13, lineHeight: 1.7, marginBottom: 24 }}>
-                Have a referral or promo code? Redeem it for <span style={{ color: '#10b981' }}>+10 points</span>.
+            <div style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '24px 28px' }}>
+              <p style={{ color: '#fca5a5', fontSize: 13, lineHeight: 1.7, marginBottom: 20 }}>
+                This will permanently delete your account and all associated data. <strong>This cannot be undone.</strong>
               </p>
-              {redeemStatus && (
-                <div style={{
-                  background: redeemStatus === 'success' ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)',
-                  border: `1px solid ${redeemStatus === 'success' ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.25)'}`,
-                  borderRadius: 6, padding: '12px 16px', marginBottom: 20,
-                  color: redeemStatus === 'success' ? '#6ee7b7' : '#fca5a5', fontSize: 13, lineHeight: 1.6
-                }}>
-                  {redeemMessage}
-                </div>
-              )}
-              <form onSubmit={handleRedeem} style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <input
-                  className="redeem-input"
-                  type="text"
-                  placeholder="ENTER_CODE"
-                  value={redeemCode}
-                  onChange={e => setRedeemCode(e.target.value.toUpperCase())}
-                  disabled={redeemLoading}
-                />
-                <button className="btn-redeem" type="submit" disabled={redeemLoading || !redeemCode.trim()}>
-                  {redeemLoading ? 'Processing...' : 'Redeem_'}
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <button className="btn-danger-confirm" onClick={handleDeleteAccount} disabled={deleting}>
+                  <Trash2 size={14} />
+                  {deleting ? 'Deleting...' : 'Confirm_Delete'}
                 </button>
-              </form>
-            </>
+                <button className="btn-cancel" onClick={() => setShowDeleteConfirm(false)} disabled={deleting}>
+                  Cancel
+                </button>
+              </div>
+            </div>
           )}
         </div>
 
