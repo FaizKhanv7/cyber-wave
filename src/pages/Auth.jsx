@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Terminal, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 import MatrixBackground from '../components/MatrixBackground';
 import Navbar from '../components/Navbar';
 
@@ -55,6 +56,17 @@ export default function Auth() {
       } catch {
         setError('Network error. Please try again.');
       }
+    } else if (mode === 'forgot') {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (resetError) {
+        setError(resetError.message);
+      } else {
+        setSuccess('Reset link sent — check your inbox.');
+      }
+      setSubmitting(false);
+      return;
     } else {
       const { error } = await signIn({ email, password });
       if (error) {
@@ -183,15 +195,15 @@ export default function Auth() {
           </div>
 
           <h1 style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 800, fontSize: 'clamp(36px, 6vw, 60px)', lineHeight: 1.0, marginBottom: 16, color: '#f0fdf4' }}>
-            {mode === 'login' ? 'Access_' : 'Initialize_'}
+            {mode === 'login' ? 'Access_' : mode === 'signup' ? 'Initialize_' : 'Recover_'}
             <br />
             <span style={{ background: 'linear-gradient(100deg, #6ee7b7 0%, #10b981 50%, #047857 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              {mode === 'login' ? 'Network' : 'Account'}
+              {mode === 'login' ? 'Network' : mode === 'signup' ? 'Account' : 'Access'}
             </span>
           </h1>
 
           <p style={{ color: '#6b7280', fontSize: 13, lineHeight: 1.8 }}>
-            {mode === 'login' ? 'Enter credentials to access your node.' : 'Register your node on the WaveHack network.'}
+            {mode === 'login' ? 'Enter credentials to access your node.' : mode === 'signup' ? 'Register your node on the WaveHack network.' : 'Enter your email to receive a password reset link.'}
           </p>
         </div>
 
@@ -236,22 +248,31 @@ export default function Auth() {
               />
             </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#10b981', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>Password</label>
-              <input
-                className="auth-input"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-              />
-            </div>
+            {mode !== 'forgot' && (
+              <div>
+                <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#10b981', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>Password</label>
+                <input
+                  className="auth-input"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                />
+                {mode === 'login' && (
+                  <div style={{ textAlign: 'right', marginTop: 8 }}>
+                    <button type="button" className="mode-toggle" style={{ fontSize: 12 }} onClick={() => switchMode('forgot')}>
+                      Forgot password?
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             <button className="btn-submit" type="submit" disabled={submitting}>
               <Lock size={14} />
-              {submitting ? 'Processing...' : mode === 'login' ? 'Authenticate_' : 'Create_Node'}
+              {submitting ? 'Processing...' : mode === 'login' ? 'Authenticate_' : mode === 'signup' ? 'Create_Node' : 'Send_Reset_Link'}
             </button>
           </form>
 
@@ -259,6 +280,10 @@ export default function Auth() {
             {mode === 'login' ? (
               <>No account yet?{' '}
                 <button className="mode-toggle" onClick={() => switchMode('signup')}>Initialize_one</button>
+              </>
+            ) : mode === 'forgot' ? (
+              <>Remembered it?{' '}
+                <button className="mode-toggle" onClick={() => switchMode('login')}>Back_to_login</button>
               </>
             ) : (
               <>Already registered?{' '}

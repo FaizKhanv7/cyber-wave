@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Leaderboard from "./pages/Leaderboard";
 import Signup from "./pages/Signup";
 import Certificates from "./pages/Certificates.tsx";
+import ResetPassword from "./pages/ResetPassword";
 import Layout from "./components/Layout";
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/certificates" element={<Certificates />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </AuthProvider>
   );

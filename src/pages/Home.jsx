@@ -5,6 +5,7 @@ import {
   MapPin,
   ArrowRight,
   CheckCircle,
+  ArrowUpRight,
   ExternalLink,
   Terminal,
   Instagram,
@@ -298,7 +299,7 @@ export default function Home() {
   const statsRef = useRef(null);
   const [statsVisible, setStatsVisible] = useState(false);
   const stat1 = useCountUp("2", 1200, statsVisible);
-  const stat2 = useCountUp("75+", 1800, statsVisible);
+  const stat2 = useCountUp("100+", 1800, statsVisible);
   const stat3 = useCountUp("$700+", 2000, statsVisible);
 
   useEffect(() => {
@@ -413,6 +414,31 @@ export default function Home() {
           background: #34d399;
           box-shadow: 0 0 30px rgba(16,185,129,0.5);
           transform: translateY(-2px);
+        }
+
+        .btn-hollow {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 14px 36px;
+          background: transparent;
+          color: #10b981;
+          font-weight: 700;
+          font-size: 15px;
+          font-family: 'JetBrains Mono', monospace;
+          text-transform: uppercase;
+          text-decoration: none;
+          border-radius: 6px;
+          border: 1px solid #10b981;
+          transition: all 0.3s ease;
+          letter-spacing: 0.5px;
+        }
+        .btn-hollow:hover {
+          background: rgba(16,185,129,0.08);
+          box-shadow: 0 0 20px rgba(16,185,129,0.2);
+          transform: translateY(-2px);
+          color: #6ee7b7;
+          border-color: #6ee7b7;
         }
 
         .btn-register {
@@ -563,9 +589,12 @@ export default function Home() {
             />
           </div>
 
-          <div className="hero-cta" style={{ marginBottom: 48 }}>
+          <div className="hero-cta" style={{ marginBottom: 48, display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
             <a href="#events" className="btn-primary">
               View Events <ArrowRight size={16} />
+            </a>
+            <a href="https://tally.so/r/MeMOj8" target="_blank" rel="noopener noreferrer" className="btn-hollow">
+              Volunteer <ArrowUpRight size={16} />
             </a>
           </div>
         </div>
@@ -744,23 +773,29 @@ export default function Home() {
           position: "relative",
           zIndex: 10,
           borderTop: "1px solid rgba(16,185,129,0.1)",
-          padding: "32px 48px",
+          padding: "40px 48px",
           display: "flex",
-          justifyContent: "space-between",
+          flexDirection: "column",
           alignItems: "center",
-          flexWrap: "wrap",
-          gap: 16,
+          gap: 20,
           background: "#010402",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <img src="/Logo.png" alt="Logo" style={{ width: 40, height: 40, objectFit: "contain" }} />
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, fontSize: 15, color: "#10b981" }}>
-            WaveHack
-          </span>
-          <span style={{ color: "#4b5563", fontSize: 14, marginLeft: 4 }}>
-            &copy; {new Date().getFullYear()}
-          </span>
+        <div
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontWeight: 800,
+            fontSize: "clamp(32px, 5vw, 52px)",
+            letterSpacing: "0.22em",
+            WebkitTextStroke: "1.5px #10b981",
+            WebkitTextFillColor: "transparent",
+            color: "transparent",
+            textTransform: "uppercase",
+            userSelect: "none",
+            lineHeight: 1,
+          }}
+        >
+          WAVEHACK
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
@@ -777,6 +812,10 @@ export default function Home() {
             <Mail size={22} />
           </a>
         </div>
+
+        <span style={{ color: "#374151", fontSize: 12, fontFamily: "monospace", letterSpacing: "0.05em" }}>
+          &copy; {new Date().getFullYear()} WaveHack
+        </span>
       </footer>
     </div>
   );
