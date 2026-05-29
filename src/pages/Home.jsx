@@ -667,6 +667,36 @@ export default function Home() {
                 </span>
               </div>
             </div>
+            <Link
+              to="/certificates"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                marginTop: 20,
+                padding: "10px 20px",
+                background: "rgba(16,185,129,0.1)",
+                border: "1px solid rgba(16,185,129,0.3)",
+                borderRadius: 6,
+                color: "#10b981",
+                fontSize: 14,
+                fontWeight: 600,
+                fontFamily: "monospace",
+                textDecoration: "none",
+                letterSpacing: "0.05em",
+                transition: "all 0.15s",
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "rgba(16,185,129,0.2)";
+                e.currentTarget.style.borderColor = "rgba(16,185,129,0.6)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "rgba(16,185,129,0.1)";
+                e.currentTarget.style.borderColor = "rgba(16,185,129,0.3)";
+              }}
+            >
+              <ExternalLink size={14} /> View Certificates
+            </Link>
           </div>
 
           {/* FINISHED EVENT */}
