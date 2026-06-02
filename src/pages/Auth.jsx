@@ -195,10 +195,8 @@ export default function Auth() {
           </div>
 
           <h1 style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 800, fontSize: 'clamp(36px, 6vw, 60px)', lineHeight: 1.0, marginBottom: 16, color: '#f0fdf4' }}>
-            {mode === 'login' ? 'Access_' : mode === 'signup' ? 'Initialize_' : 'Recover_'}
-            <br />
             <span style={{ background: 'linear-gradient(100deg, #6ee7b7 0%, #10b981 50%, #047857 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              {mode === 'login' ? 'Network' : mode === 'signup' ? 'Account' : 'Access'}
+              {mode === 'login' ? 'LogIn' : mode === 'signup' ? 'Create An Account' : 'Forgot Something?'}
             </span>
           </h1>
 

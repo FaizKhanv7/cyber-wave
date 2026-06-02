@@ -12,6 +12,10 @@ import {
   Linkedin,
   Mail,
   MessageSquare,
+  Zap,
+  Star,
+  DollarSign,
+  Users,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
@@ -311,6 +315,14 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
+  const [waveHack26Registered, setWaveHack26Registered] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("wavehack26_registered") === "true") {
+      setWaveHack26Registered(true);
+    }
+  }, []);
+
   const sponsors = [
     { name: "Google Gemini", logo: "/GeminiIcon.png", url: "https://gemini.google.com" },
     { name: "GitHub", logo: "/github.png", url: "https://github.com" },
@@ -465,6 +477,14 @@ export default function Home() {
           background: #34d399;
           box-shadow: 0 0 32px rgba(16,185,129,0.5);
           transform: translateY(-2px);
+        }
+
+        .btn-register:disabled {
+          background: rgba(16,185,129,0.35);
+          color: #94a3b8;
+          box-shadow: none;
+          cursor: not-allowed;
+          transform: none;
         }
 
         .sponsor-card {
@@ -646,6 +666,114 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── HOW POINTS WORK ─── */}
+      <section style={{ position: "relative", zIndex: 10, padding: "0 24px 72px" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 40 }}>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 32, color: "#f0fdf4" }}>
+              How Points Work
+            </h2>
+          </div>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
+            <div style={{
+              flex: "1 1 240px", maxWidth: 280,
+              background: "linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(4,120,87,0.06) 100%)",
+              border: "1px solid rgba(16,185,129,0.18)",
+              borderRadius: 12, padding: "28px 24px", textAlign: "center",
+            }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: "50%",
+                  background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <Star size={22} color="#10b981" />
+                </div>
+              </div>
+              <div style={{
+                fontFamily: "'JetBrains Mono', monospace", fontWeight: 800, fontSize: 34,
+                background: "linear-gradient(100deg, #6ee7b7 0%, #10b981 100%)",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                marginBottom: 8,
+              }}>+50 pts</div>
+              <p style={{ color: "#d1fae5", fontWeight: 700, fontSize: 15, marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>
+                Refer a Friend
+              </p>
+              <p style={{ color: "#6b7280", fontSize: 13, fontFamily: "'Inter', sans-serif", lineHeight: 1.6 }}>
+                Earn 50 points each time someone signs up using your referral code
+              </p>
+            </div>
+
+            <div style={{
+              flex: "1 1 240px", maxWidth: 280,
+              background: "linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(4,120,87,0.06) 100%)",
+              border: "1px solid rgba(16,185,129,0.18)",
+              borderRadius: 12, padding: "28px 24px", textAlign: "center",
+            }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: "50%",
+                  background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <Users size={22} color="#10b981" />
+                </div>
+              </div>
+              <div style={{
+                fontFamily: "'JetBrains Mono', monospace", fontWeight: 800, fontSize: 34,
+                background: "linear-gradient(100deg, #6ee7b7 0%, #10b981 100%)",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                marginBottom: 8,
+              }}>+10 pts</div>
+              <p style={{ color: "#d1fae5", fontWeight: 700, fontSize: 15, marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>
+                Use a Referral Code
+              </p>
+              <p style={{ color: "#6b7280", fontSize: 13, fontFamily: "'Inter', sans-serif", lineHeight: 1.6 }}>
+                Earn 10 points when you sign up using someone else's referral code
+              </p>
+            </div>
+
+            <div style={{
+              flex: "1 1 240px", maxWidth: 280,
+              background: "linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(4,120,87,0.06) 100%)",
+              border: "1px solid rgba(16,185,129,0.18)",
+              borderRadius: 12, padding: "28px 24px", textAlign: "center",
+            }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: "50%",
+                  background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <DollarSign size={22} color="#10b981" />
+                </div>
+              </div>
+              <div style={{
+                fontFamily: "'JetBrains Mono', monospace", fontWeight: 800, fontSize: 28,
+                background: "linear-gradient(100deg, #6ee7b7 0%, #10b981 100%)",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
+                marginBottom: 8,
+              }}>500 = $3</div>
+              <p style={{ color: "#d1fae5", fontWeight: 700, fontSize: 15, marginBottom: 8, fontFamily: "'Inter', sans-serif" }}>
+                Redeem Rewards
+              </p>
+              <p style={{ color: "#6b7280", fontSize: 13, fontFamily: "'Inter', sans-serif", lineHeight: 1.6 }}>
+                Cash out your points — 500 points equals $3 in real value
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── DIVIDER ─── */}
+      <div style={{ position: "relative", zIndex: 10, padding: "0 24px", marginBottom: 64 }}>
+        <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, transparent, rgba(16,185,129,0.25))" }} />
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px rgba(16,185,129,0.6)" }} />
+          <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(16,185,129,0.25), transparent)" }} />
+        </div>
+      </div>
+
       {/* ─── EVENTS SECTION ─── */}
       <section id="events" style={{ position: "relative", zIndex: 10, padding: "0 24px 96px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", flexDirection: "column", gap: 32 }}>
@@ -660,6 +788,114 @@ export default function Home() {
             >
               Hackathons
             </h2>
+          </div>
+
+          {/* UPCOMING EVENT — HACKDAY: SNOWFLAKE */}
+          <div className="event-card">
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                <span
+                  style={{
+                    background: "rgba(16,185,129,0.08)",
+                    color: "#34d399",
+                    padding: "6px 12px",
+                    borderRadius: 4,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontFamily: "monospace",
+                    border: "1px solid rgba(16,185,129,0.25)",
+                  }}
+                >
+                  Upcoming
+                </span>
+              </div>
+              <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 28, color: "#d1fae5", marginBottom: 16 }}>
+                Hackday: Snowflake
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#6b7280", fontSize: 15 }}>
+                  <Calendar size={18} color="#059669" /> June 20, 2026
+                </span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#6b7280", fontSize: 15 }}>
+                  <MapPin size={18} color="#059669" /> TBA
+                </span>
+              </div>
+            </div>
+            <button className="btn-register" disabled>
+              Registration open soon
+            </button>
+          </div>
+
+          {/* UPCOMING EVENT — WAVEHACK '26 */}
+          <div className="event-card">
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                <span
+                  style={{
+                    background: "rgba(16,185,129,0.08)",
+                    color: "#34d399",
+                    padding: "6px 12px",
+                    borderRadius: 4,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                    fontFamily: "monospace",
+                    border: "1px solid rgba(16,185,129,0.25)",
+                  }}
+                >
+                  Upcoming
+                </span>
+              </div>
+              <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 28, color: "#d1fae5", marginBottom: 16 }}>
+                WaveHack GameJam
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#6b7280", fontSize: 15 }}>
+                  <Calendar size={18} color="#059669" /> June 28, 2026
+                </span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "#6b7280", fontSize: 15 }}>
+                  <MapPin size={18} color="#059669" /> TBA
+                </span>
+              </div>
+            </div>
+            {waveHack26Registered ? (
+              <button
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "14px 32px",
+                  background: "rgba(16,185,129,0.12)",
+                  color: "#10b981",
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontWeight: 700,
+                  fontSize: 13,
+                  textTransform: "uppercase",
+                  borderRadius: 6,
+                  border: "1px solid rgba(16,185,129,0.35)",
+                  letterSpacing: 1,
+                  cursor: "default",
+                  whiteSpace: "nowrap",
+                }}
+                disabled
+              >
+                <CheckCircle size={16} /> Registered
+              </button>
+            ) : (
+              <Link
+                to="/signup"
+                className="btn-register"
+              >
+                Register <ArrowRight size={15} />
+              </Link>
+            )}
           </div>
 
           {/* FINISHED EVENT — GITHUB */}

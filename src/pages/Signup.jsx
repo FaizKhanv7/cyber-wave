@@ -52,6 +52,7 @@ export default function Signup() {
         }
       }
 
+      localStorage.setItem('wavehack26_registered', 'true');
       setSuccess(true);
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
@@ -72,11 +73,23 @@ export default function Signup() {
             <h1 style={{ fontWeight: 800, fontSize: 'clamp(28px, 5vw, 44px)', lineHeight: 1.1, marginBottom: 16, color: '#f0fdf4' }}>
               You're{' '}
               <span style={{ background: 'linear-gradient(100deg, #6ee7b7 0%, #10b981 50%, #047857 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                Registered
+                In!
               </span>
             </h1>
+            <p style={{ color: '#6b7280', fontSize: 13, lineHeight: 1.8, marginBottom: 16 }}>
+              We've got you registered, see you at WaveHack GameJam!
+            </p>
             <p style={{ color: '#6b7280', fontSize: 13, lineHeight: 1.8, marginBottom: referralNote ? 20 : 0 }}>
-              We've got you on the list. See you at the next WaveHack event.
+              To stay in touch, join the{' '}
+              <a
+                href="https://groupme.com/join_group/113593335/tHhxoCgi"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#10b981', textDecoration: 'underline', textUnderlineOffset: 3 }}
+              >
+                GroupMe
+              </a>
+              .
             </p>
             {referralNote && (
               <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 6, padding: '12px 16px', marginTop: 20, color: '#6ee7b7', fontSize: 12 }}>
@@ -192,15 +205,14 @@ export default function Signup() {
           </div>
 
           <h1 style={{ fontWeight: 800, fontSize: 'clamp(36px, 6vw, 60px)', lineHeight: 1.0, marginBottom: 16, color: '#f0fdf4' }}>
-            Join_
+            WaveHack
             <br />
             <span style={{ background: 'linear-gradient(100deg, #6ee7b7 0%, #10b981 50%, #047857 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              WaveHack
+              GameJam
             </span>
           </h1>
 
           <p style={{ color: '#6b7280', fontSize: 13, lineHeight: 1.8 }}>
-            Secure your spot at the next event.
             {!user && (
               <span style={{ display: 'block', marginTop: 6, color: 'rgba(110,231,183,0.6)', fontSize: 12 }}>
                 Have a WaveHack account?{' '}
@@ -229,7 +241,7 @@ export default function Signup() {
               <input
                 className="su-input"
                 type="text"
-                placeholder="Ada Lovelace"
+                placeholder="Faiz Khan"
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
                 required
