@@ -1,297 +1,278 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Terminal, Lock } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { supabase } from '../lib/supabase';
-import MatrixBackground from '../components/MatrixBackground';
-import Navbar from '../components/Navbar';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight, KeyRound, Mail, UserPlus } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { supabase } from "../lib/supabase";
+import WavePageShell from "../components/WavePageShell";
 
 export default function Auth() {
-  const [mode, setMode] = useState('login');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [mode, setMode] = useState("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const { user, loading, signIn } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && user) navigate('/dashboard');
+    if (!loading && user) navigate("/dashboard");
   }, [user, loading, navigate]);
 
   function switchMode(next) {
     setMode(next);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
     setSubmitting(true);
 
-    if (mode === 'signup') {
-      if (!username.trim()) { setError('Username is required'); setSubmitting(false); return; }
-      try {
-        const res = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-signup-otp`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({ email, password, username: username.trim() }),
-          }
-        );
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error || 'Failed to send verification code');
-        } else {
-          navigate('/confirm-email', { state: { email, password } });
-        }
-      } catch {
-        setError('Network error. Please try again.');
+    if (mode === "signup") {
+      if (!username.trim()) {
+        setError("Username is required");
+        setSubmitting(false);
+        return;
       }
-    } else if (mode === 'forgot') {
+
+      try {
+        const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-signup-otp`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({ email, password, username: username.trim() }),
+        });
+        const data = await res.json();
+        if (!res.ok) setError(data.error || "Failed to send verification code");
+        else navigate("/confirm-email", { state: { email, password } });
+      } catch {
+        setError("Network error. Please try again.");
+      }
+    } else if (mode === "forgot") {
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
-      if (resetError) {
-        setError(resetError.message);
-      } else {
-        setSuccess('Reset link sent — check your inbox.');
-      }
+      if (resetError) setError(resetError.message);
+      else setSuccess("Reset link sent. Check your inbox.");
       setSubmitting(false);
       return;
     } else {
       const { error } = await signIn({ email, password });
-      if (error) {
-        setError(error.message);
-      } else {
-        navigate('/dashboard');
-      }
+      if (error) setError(error.message);
+      else navigate("/dashboard");
     }
+
     setSubmitting(false);
   }
 
+  const heading = mode === "login" ? "Welcome back." : mode === "signup" ? "Join the wave." : "Reset your key.";
+  const subheading =
+    mode === "login"
+      ? "Log in to track points, share your referral code, and manage your WaveHack account."
+      : mode === "signup"
+        ? "Create your builder account, then verify your email with a short code."
+        : "Enter your email and we will send you a password reset link.";
+
   return (
-    <div style={{ background: '#020804', color: '#f0fdf4', minHeight: '100vh', fontFamily: "'JetBrains Mono', monospace", overflowX: 'hidden', position: 'relative' }}>
+    <WavePageShell>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
-        * { box-sizing: border-box; }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(24px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes blink {
-          0%, 100% { opacity: 1; } 50% { opacity: 0; }
-        }
-        @keyframes scanline {
-          0%   { transform: translateY(-100%); }
-          100% { transform: translateY(500%); }
+        .auth-layout {
+          display: grid;
+          grid-template-columns: 0.9fr 1.1fr;
+          gap: 28px;
+          align-items: stretch;
         }
 
-        .auth-fade-1 { animation: fadeUp 0.6s ease both; }
-        .auth-fade-2 { animation: fadeUp 0.6s ease 0.1s both; }
-        .auth-fade-3 { animation: fadeUp 0.6s ease 0.2s both; }
-
-        .cursor-blink { animation: blink 1s step-end infinite; display: inline-block; width: 2px; height: 14px; background: #10b981; margin-left: 3px; vertical-align: middle; }
-
-        .auth-card {
-          background: rgba(16,185,129,0.01);
-          border: 1px solid rgba(107,114,128,0.15);
+        .auth-side {
+          padding: clamp(28px, 5vw, 44px);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 520px;
+          color: #fff8ea;
+          background:
+            linear-gradient(135deg, rgba(61,110,245,0.92), rgba(36,22,27,0.92)),
+            url('/event4.jpg') center / cover;
+          background-blend-mode: multiply;
+          border: 3px solid var(--ink);
           border-radius: 8px;
-          padding: 48px;
-          position: relative;
-          overflow: hidden;
-        }
-        .auth-card::after {
-          content: '';
-          position: absolute;
-          top: -50%;
-          left: 0;
-          width: 100%;
-          height: 2px;
-          background: linear-gradient(90deg, transparent, rgba(16,185,129,0.4), transparent);
-          animation: scanline 5s ease-in-out infinite;
+          box-shadow: 8px 8px 0 var(--accent);
         }
 
-        .auth-input {
-          width: 100%;
-          background: rgba(16,185,129,0.04);
-          border: 1px solid rgba(16,185,129,0.15);
-          border-radius: 6px;
-          padding: 12px 16px;
-          color: #f0fdf4;
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 14px;
-          outline: none;
-          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        .auth-side h2 {
+          margin: 0;
+          font-family: Georgia, 'Times New Roman', serif;
+          font-size: clamp(42px, 6vw, 76px);
+          line-height: 0.92;
         }
-        .auth-input:focus {
-          border-color: rgba(16,185,129,0.5);
-          box-shadow: 0 0 16px rgba(16,185,129,0.08);
-        }
-        .auth-input::placeholder { color: rgba(107,114,128,0.7); }
 
-        .btn-submit {
-          width: 100%;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          padding: 14px 32px;
-          background: #10b981;
-          color: #020804;
-          font-family: 'JetBrains Mono', monospace;
-          font-weight: 800;
-          font-size: 14px;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          box-shadow: 0 0 24px rgba(16,185,129,0.25);
-          transition: all 0.3s ease;
+        .auth-side p {
+          margin: 18px 0 0;
+          max-width: 360px;
+          color: #fff4dc;
+          font-weight: 850;
+          line-height: 1.55;
         }
-        .btn-submit:hover:not(:disabled) {
-          background: #34d399;
-          box-shadow: 0 0 36px rgba(16,185,129,0.5);
-          transform: translateY(-2px);
-        }
-        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .mode-toggle {
-          background: none;
-          border: none;
-          color: #10b981;
-          font-family: 'JetBrains Mono', monospace;
-          font-size: 13px;
-          cursor: pointer;
-          padding: 0;
-          text-decoration: underline;
-          text-underline-offset: 3px;
-          transition: color 0.2s ease;
+        .auth-mini-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          margin-top: 30px;
         }
-        .mode-toggle:hover { color: #6ee7b7; }
+
+        .auth-mini-grid span {
+          padding: 13px;
+          border: 2px solid #fff4dc;
+          border-radius: 8px;
+          background: rgba(255,244,220,0.1);
+          font-weight: 900;
+        }
+
+        .auth-card-title {
+          margin: 0 0 22px;
+          color: var(--card-text);
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 30px;
+          line-height: 1;
+        }
+
+        .auth-form {
+          display: grid;
+          gap: 18px;
+        }
+
+        .auth-row {
+          display: grid;
+          gap: 8px;
+        }
+
+        .auth-switch {
+          margin-top: 26px;
+          text-align: center;
+          color: #604245;
+          font-weight: 850;
+        }
+
+        .forgot-row {
+          margin-top: 8px;
+          text-align: right;
+        }
+
+        @media (max-width: 900px) {
+          .auth-layout { grid-template-columns: 1fr; }
+          .auth-side { min-height: 360px; }
+        }
       `}</style>
 
-      <MatrixBackground />
-      <Navbar />
-
-      <div style={{ position: 'relative', zIndex: 10, maxWidth: 520, margin: '0 auto', padding: '140px 24px 96px' }}>
-
-        {/* Header */}
-        <div className="auth-fade-1" style={{ textAlign: 'center', marginBottom: 48 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 16px', border: '1px solid rgba(16,185,129,0.25)', borderRadius: 4, background: 'rgba(16,185,129,0.05)', color: '#6ee7b7', fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: 2, marginBottom: 24 }}>
-            <Terminal size={13} />
-            System: Authentication_v1.0
-            <span className="cursor-blink" />
+      <main className="wave-main">
+        <header className="wave-hero">
+          <div className="wave-badge">
+            <KeyRound size={16} /> Builder access
           </div>
-
-          <h1 style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 800, fontSize: 'clamp(36px, 6vw, 60px)', lineHeight: 1.0, marginBottom: 16, color: '#f0fdf4' }}>
-            <span style={{ background: 'linear-gradient(100deg, #6ee7b7 0%, #10b981 50%, #047857 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-              {mode === 'login' ? 'LogIn' : mode === 'signup' ? 'Create An Account' : 'Forgot Something?'}
-            </span>
+          <h1 className="wave-title">
+            {heading.split(" ")[0]} <span>{heading.split(" ").slice(1).join(" ")}</span>
           </h1>
+          <p className="wave-subtitle">{subheading}</p>
+        </header>
 
-          <p style={{ color: '#6b7280', fontSize: 13, lineHeight: 1.8 }}>
-            {mode === 'login' ? 'Enter credentials to access your node.' : mode === 'signup' ? 'Register your node on the WaveHack network.' : 'Enter your email to receive a password reset link.'}
-          </p>
-        </div>
-
-        {/* Card */}
-        <div className="auth-card auth-fade-2">
-          {success && (
-            <div style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 6, padding: '12px 16px', marginBottom: 24, color: '#6ee7b7', fontSize: 13, lineHeight: 1.6 }}>
-              {success}
-            </div>
-          )}
-          {error && (
-            <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: 6, padding: '12px 16px', marginBottom: 24, color: '#fca5a5', fontSize: 13, lineHeight: 1.6 }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            {mode === 'signup' && (
-              <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#10b981', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>Username</label>
-                <input
-                  className="auth-input"
-                  type="text"
-                  placeholder="your_handle"
-                  value={username}
-                  onChange={e => setUsername(e.target.value)}
-                  autoComplete="username"
-                />
-              </div>
-            )}
-
+        <section className="auth-layout">
+          <aside className="auth-side">
             <div>
-              <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#10b981', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>Email</label>
-              <input
-                className="auth-input"
-                type="email"
-                placeholder="node@network.io"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required
-                autoComplete="email"
-              />
+              <h2>Build, refer, climb.</h2>
+              <p>WaveHack accounts keep your points, referrals, certificates, and event access in one place.</p>
             </div>
+            <div className="auth-mini-grid">
+              <span>+50 per referral</span>
+              <span>GameJam access</span>
+              <span>Leaderboard</span>
+              <span>Rewards</span>
+            </div>
+          </aside>
 
-            {mode !== 'forgot' && (
-              <div>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: '#10b981', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>Password</label>
+          <div className="wave-card pad">
+            <h2 className="auth-card-title">
+              {mode === "login" ? "Log in" : mode === "signup" ? "Create account" : "Forgot password"}
+            </h2>
+
+            {success && <div className="wave-alert success">{success}</div>}
+            {error && <div className="wave-alert error">{error}</div>}
+
+            <form onSubmit={handleSubmit} className="auth-form">
+              {mode === "signup" && (
+                <div className="auth-row">
+                  <label className="wave-label">Username</label>
+                  <input
+                    className="wave-input"
+                    type="text"
+                    placeholder="your_handle"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    autoComplete="username"
+                  />
+                </div>
+              )}
+
+              <div className="auth-row">
+                <label className="wave-label">Email</label>
                 <input
-                  className="auth-input"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  className="wave-input"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
-                  autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+                  autoComplete="email"
                 />
-                {mode === 'login' && (
-                  <div style={{ textAlign: 'right', marginTop: 8 }}>
-                    <button type="button" className="mode-toggle" style={{ fontSize: 12 }} onClick={() => switchMode('forgot')}>
-                      Forgot password?
-                    </button>
-                  </div>
-                )}
               </div>
-            )}
 
-            <button className="btn-submit" type="submit" disabled={submitting}>
-              <Lock size={14} />
-              {submitting ? 'Processing...' : mode === 'login' ? 'Authenticate_' : mode === 'signup' ? 'Create_Node' : 'Send_Reset_Link'}
-            </button>
-          </form>
+              {mode !== "forgot" && (
+                <div className="auth-row">
+                  <label className="wave-label">Password</label>
+                  <input
+                    className="wave-input"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    autoComplete={mode === "login" ? "current-password" : "new-password"}
+                  />
+                  {mode === "login" && (
+                    <div className="forgot-row">
+                      <button type="button" className="wave-link-button" onClick={() => switchMode("forgot")}>
+                        Forgot password?
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
 
-          <div style={{ marginTop: 28, textAlign: 'center', color: '#6b7280', fontSize: 13 }}>
-            {mode === 'login' ? (
-              <>No account yet?{' '}
-                <button className="mode-toggle" onClick={() => switchMode('signup')}>Initialize_one</button>
-              </>
-            ) : mode === 'forgot' ? (
-              <>Remembered it?{' '}
-                <button className="mode-toggle" onClick={() => switchMode('login')}>Back_to_login</button>
-              </>
-            ) : (
-              <>Already registered?{' '}
-                <button className="mode-toggle" onClick={() => switchMode('login')}>Access_Network</button>
-              </>
-            )}
+              <button className="wave-button" type="submit" disabled={submitting}>
+                {mode === "signup" ? <UserPlus size={18} /> : mode === "forgot" ? <Mail size={18} /> : <KeyRound size={18} />}
+                {submitting ? "Working..." : mode === "login" ? "Log in" : mode === "signup" ? "Create account" : "Send reset link"}
+                <ArrowRight size={18} />
+              </button>
+            </form>
+
+            <div className="auth-switch">
+              {mode === "login" ? (
+                <>No account yet? <button className="wave-link-button" onClick={() => switchMode("signup")}>Sign up</button></>
+              ) : mode === "forgot" ? (
+                <>Remembered it? <button className="wave-link-button" onClick={() => switchMode("login")}>Back to login</button></>
+              ) : (
+                <>Already registered? <button className="wave-link-button" onClick={() => switchMode("login")}>Log in</button></>
+              )}
+            </div>
           </div>
-        </div>
-
-      </div>
-    </div>
+        </section>
+      </main>
+    </WavePageShell>
   );
 }

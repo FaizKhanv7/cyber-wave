@@ -2,11 +2,9 @@ import Navbar from "./Navbar";
 
 export default function Layout({ children }) {
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen">
       <Navbar />
-      <div className="pt-20"> {/* Adds space below fixed navbar */}
-        {children}
-      </div>
+      {children}
     </div>
   );
 }

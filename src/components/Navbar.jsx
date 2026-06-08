@@ -1,142 +1,175 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { Terminal } from "lucide-react";
+import { useEffect, useState } from "react";
+import { LayoutDashboard, LogIn, Moon, Sun } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-export default function Navbar() {
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+export default function Navbar({ theme, onToggleTheme }) {
+  const [internalTheme, setInternalTheme] = useState(() => localStorage.getItem("wavehack_theme") || "dark");
   const { user } = useAuth();
+  const activeTheme = theme || internalTheme;
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-      setLastScrollY(currentScrollY);
-    };
+    if (theme) setInternalTheme(theme);
+  }, [theme]);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  const handleToggleTheme = () => {
+    const nextTheme = activeTheme === "dark" ? "light" : "dark";
+    if (onToggleTheme) {
+      onToggleTheme(nextTheme);
+      return;
+    }
+
+    setInternalTheme(nextTheme);
+    localStorage.setItem("wavehack_theme", nextTheme);
+    window.dispatchEvent(new CustomEvent("wavehack-theme-change", { detail: nextTheme }));
+  };
 
   return (
     <nav
       style={{
-        position: "fixed",
-        top: "24px",
-        left: "50%",
-        transform: `translate(-50%, ${isVisible ? '0' : '-150%'})`,
-        transition: "transform 0.3s ease-in-out",
-        width: "calc(100% - 48px)",
-        maxWidth: "1100px",
+        position: "sticky",
+        top: 0,
+        width: "100%",
         zIndex: 50,
-        background: "rgba(2,8,4,0.45)",
-        backdropFilter: "blur(24px) saturate(160%)",
-        WebkitBackdropFilter: "blur(24px) saturate(160%)",
-        border: "1px solid rgba(16,185,129,0.18)",
-        borderRadius: "100px",
-        fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-        display: "flex",
-        alignItems: "center",
+        fontFamily: "'Inter', system-ui, sans-serif",
       }}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-
-        .nav-logo-link { transition: opacity 0.2s ease; text-decoration: none; display: flex; align-items: center; gap: 10px; }
-        .nav-logo-link:hover { opacity: 0.85; }
-
-        .nav-logo-box { padding: 4px; transition: all 0.3s ease; }
-
-        .nav-logo-text {
-          font-family: 'JetBrains Mono', monospace;
-          font-weight: 700;
-          font-size: 17px;
-          color: #f0fdf4;
-          letter-spacing: 2px;
-          transition: color 0.2s ease;
+        .wave-nav.dark {
+          --nav-bg: #24161b;
+          --nav-text: #fff8ea;
+          --button-bg: #fff4dc;
+          --button-text: #21191a;
+          --toggle-bg: #3a2228;
+          --ink: #251b1d;
+          --shadow: rgba(0,0,0,0.36);
+          --accent: #3d6ef5;
+          --badge-text: #fff8ea;
         }
-        .nav-logo-link:hover .nav-logo-text { color: #6ee7b7; }
-
-        .nav-cta {
+        .wave-nav.light {
+          --nav-bg: #fff4dc;
+          --nav-text: #251b1d;
+          --button-bg: #251b1d;
+          --button-text: #fff8ea;
+          --toggle-bg: #ffe4b5;
+          --ink: #251b1d;
+          --shadow: rgba(37,27,29,0.2);
+          --accent: #3d6ef5;
+          --badge-text: #fff8ea;
+        }
+        .wave-nav {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 18px;
+          width: 100%;
+          padding: 14px max(20px, calc((100vw - 1180px) / 2));
+          border-bottom: 3px solid var(--ink);
+          background: var(--nav-bg);
+          color: var(--nav-text);
+          box-shadow: 0 5px 0 var(--shadow);
+          backdrop-filter: blur(18px);
+        }
+        .wave-mark {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          padding: 9px 20px;
-          font-family: 'JetBrains Mono', monospace;
-          font-weight: 600;
-          font-size: 13px;
-          color: #10b981;
+          gap: 10px;
+          color: var(--nav-text);
           text-decoration: none;
-          border: 1px solid rgba(16,185,129,0.5);
-          border-radius: 9999px;
-          background: rgba(16,185,129,0.04);
-          box-shadow: 0 0 12px rgba(16,185,129,0.1);
-          transition: all 0.3s ease;
-          letter-spacing: 0.5px;
-          text-transform: uppercase;
+          font-weight: 900;
+          letter-spacing: 0;
         }
-        .nav-cta:hover {
-          background: rgba(16,185,129,0.12);
-          border-color: #10b981;
-          box-shadow: 0 0 20px rgba(16,185,129,0.25);
-          color: #6ee7b7;
+        .wave-mark img {
+          width: 38px;
+          height: 38px;
+          object-fit: contain;
+          border-radius: 50%;
         }
-
-        .nav-link {
-          font-family: 'JetBrains Mono', monospace;
-          font-weight: 500;
-          font-size: 13px;
-          color: #6b7280;
+        .wave-wordmark {
+          display: inline-block;
+          padding: 8px 15px;
+          color: var(--badge-text);
+          background: var(--accent);
+          border: 2px solid var(--ink);
+          border-radius: 8px;
+          font-size: 16px;
+        }
+        .wave-links {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+        .wave-links a {
+          color: var(--nav-text);
           text-decoration: none;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          background: none;
+          font-weight: 900;
+          font-size: 14px;
+          white-space: nowrap;
+        }
+        .wave-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          min-height: 34px;
+          padding: 7px 16px;
           border: none;
+          border-radius: 999px;
+          background: var(--button-bg);
+          color: var(--button-text) !important;
+          font-weight: 900;
+          font-size: 14px;
           cursor: pointer;
-          padding: 0;
-          transition: color 0.2s ease;
+          transition: opacity 150ms ease, transform 150ms ease;
         }
-        .nav-link:hover { color: #10b981; }
-
-        @media (max-width: 600px) {
-          .nav-logo-text { font-size: 15px; }
-          .nav-link { display: none; }
+        .wave-cta:hover { opacity: 0.82; transform: translateY(-1px); }
+        .theme-toggle {
+          width: 34px;
+          height: 34px;
+          display: inline-grid;
+          place-items: center;
+          border: none;
+          border-radius: 999px;
+          background: var(--toggle-bg);
+          color: var(--nav-text);
+          cursor: pointer;
+          transition: opacity 150ms ease, transform 150ms ease;
+        }
+        .theme-toggle:hover { opacity: 0.72; transform: translateY(-1px); }
+        @media (max-width: 720px) {
+          .wave-nav { padding: 10px 12px; }
+          .wave-wordmark { font-size: 14px; padding: 8px 12px; }
+          .wave-links a:not(.wave-cta) { display: none; }
+          .wave-mark img { width: 34px; height: 34px; }
         }
       `}</style>
 
-      <div
-        style={{
-          width: "100%",
-          padding: "12px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Logo */}
-        <Link to="/" className="nav-logo-link">
-          <div className="nav-logo-box">
-            <img src="/Logo.png" alt="WaveHack Logo" style={{ width: 32, height: 32, objectFit: "contain" }} />
-          </div>
-          <span className="nav-logo-text">WAVEHACK_</span>
+      <div className={`wave-nav ${activeTheme}`}>
+        <Link to="/" className="wave-mark">
+          <img src="/Logo.png" alt="WaveHack logo" />
+          <span className="wave-wordmark">WAVEHACK</span>
         </Link>
 
-        {/* Right nav */}
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <Link to="/leaderboard" className="nav-link">Leaderboard</Link>
-
+        <div className="wave-links">
+          <a href="/#events">Events</a>
+          <a href="/#projects">Projects</a>
+          <a href="/#sponsors">Sponsors</a>
+          <Link to="/leaderboard">Leaderboard</Link>
+          <button
+            type="button"
+            className="theme-toggle"
+            onClick={handleToggleTheme}
+            aria-label={`Switch to ${activeTheme === "dark" ? "light" : "dark"} theme`}
+            title={`Switch to ${activeTheme === "dark" ? "light" : "dark"} theme`}
+          >
+            {activeTheme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
           {user ? (
-            <Link to="/dashboard" className="nav-cta">
-              <Terminal size={14} /> Dashboard
+            <Link to="/dashboard" className="wave-cta">
+              <LayoutDashboard size={16} /> Dashboard
             </Link>
           ) : (
-            <Link to="/auth" className="nav-cta">
-              <Terminal size={14} /> Login
+            <Link to="/auth" className="wave-cta">
+              <LogIn size={16} /> Login
             </Link>
           )}
         </div>
